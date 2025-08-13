@@ -18,6 +18,18 @@ http://127.0.0.1:8000/docs#/
 Prometheus :
 http://localhost:8000/metrics
 
+projet_ocr/
+│
+├── api_ocr.py
+├── requirements.txt
+├── prometheus.yml
+└── docker-compose.yml
+
+
+
+
+
+
 Ton API → expose /metrics
        ↑
    Prometheus → stocke l’historique des métriques
