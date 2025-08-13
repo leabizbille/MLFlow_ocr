@@ -1,22 +1,32 @@
 # fichier: api_ocr.py
 from fastapi import FastAPI, UploadFile, File, HTTPException
-import tempfile
-import shutil
 from pathlib import Path
-import os
 from fastapi.responses import JSONResponse
 from Fonctions_OCR import ComparerOriginal_GT_Normaliser, recuperer_texte_ocr, ComparerOriginal_GT
+import tempfile, shutil, os
 
-# Dossier temporaire pour stocker les fichiers uploadés
+# Import du monitoring
+from metrics_server import prometheus_middleware, metrics_endpoint, TEXT_LENGTH
+
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
-
 
 app = FastAPI(
     title="API OCR avec PaddleOCR",
     description="API pour extraire le texte d'une image (tous formats supportés par Pillow) via PaddleOCR",
-    version="1.0"
+    version="3.0"
 )
+
+# Ajout du middleware Prometheus
+app.middleware("http")(prometheus_middleware)
+
+# Ajout de l'endpoint /metrics
+app.add_route("/metrics", metrics_endpoint)
+
+
+
+
+
 
 @app.post("/ocr/")
 async def ocr_image(file: UploadFile = File(...)):
@@ -32,6 +42,9 @@ async def ocr_image(file: UploadFile = File(...)):
     with tempfile.NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
         shutil.copyfileobj(file.file, tmp)
         tmp_path = tmp.name
+        texte = recuperer_texte_ocr(tmp_path)
+        # Enregistre la longueur du texte OCR dans Prometheus
+        TEXT_LENGTH.labels(endpoint="/ocr/").set(len(texte))
 
     # Appel à la fonction OCR
     try:
