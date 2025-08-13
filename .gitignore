@@ -36,8 +36,7 @@ venv/
 
 # Dossiers générés pour les fichiers téléchargés
 output
-uploads
-mlruns
+
 
 
 # Fichiers de tests
@@ -47,3 +46,16 @@ nosetests.xml
 test_*.xml
 *.bak
 *.swp
+
+# --- Prometheus & Grafana data ---
+prometheus-data/
+grafana-data/
+
+# --- Docker ---
+*.pid
+*.sock
+docker-compose.override.yml
+
+# --- Données locales ---
+uploads/
+mlruns/
