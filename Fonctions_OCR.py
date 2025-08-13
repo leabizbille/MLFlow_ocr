@@ -4,9 +4,9 @@ from paddleocr import PaddleOCR
 import pandas as pd
 import unicodedata
 from jiwer import wer
-import Levenshtein
+#import Levenshtein
 import docx  # pip install python-docx
-#import textract  # pour lire les fichiers .doc anciens
+
 
 def ComparerOriginal_GT(img, ground_truth_path):
     """

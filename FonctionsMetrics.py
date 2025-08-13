@@ -60,6 +60,9 @@ def compute_metrics(reference: str, predicted: str) -> dict:
     robustness = 1 - cer
 
     return {
+        'true_positive': round(true_positive, 3),
+        'false_positive': round(false_positive, 3),
+        'false_negative ': round(false_negative , 3),
         'CRR': round(crr, 3),
         'CER': round(cer, 3),
         'WRR': round(wrr, 3),
