@@ -1,20 +1,52 @@
 import mlflow
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
+from Fonctions_OCR import ComparerOriginal_GT, ComparerOriginal_GT_Normaliser
+from FonctionsMetrics import compute_metrics  
 
-# Exemple avec un modèle seq2seq pour correction
-tokenizer = AutoTokenizer.from_pretrained("facebook/bart-base")
-model = AutoModelForSeq2SeqLM.from_pretrained("facebook/bart-base")
-ocr_correction_pipeline = pipeline("text2text-generation", model=model, tokenizer=tokenizer)
+def evaluer_ocr(img_path: str, ground_truth_path: str, normaliser: bool = True):
+    """
+    1. Applique OCR avec ComparerOriginal_GT ou ComparerOriginal_GT_Normaliser
+    2. Calcule les métriques OCR
+    3. Log dans MLflow
+    """
+    # --- OCR ---
+    if normaliser:
+        result = ComparerOriginal_GT_Normaliser(img_path, ground_truth_path)
+    else:
+        result = ComparerOriginal_GT(img_path, ground_truth_path)
 
-# Suivi avec MLflow
-mlflow.start_run()
-mlflow.log_param("model_name", "bart-base")
-mlflow.log_param("ocr_correction", True)
+    reference = result['reference']       # Texte attendu
+    predicted = result['ground_truth']    # Texte OCR
 
-texte_ocr = "Exemple de text avec errurs"
-texte_corrige = ocr_correction_pipeline(texte_ocr)[0]['generated_text']
+    # --- Début suivi MLflow ---
+    mlflow.start_run()
+    mlflow.log_param("ocr_correction", False)
+    mlflow.log_param("normalisation", normaliser)
 
-mlflow.log_metric("text_length_before", len(texte_ocr))
-mlflow.log_metric("text_length_after", len(texte_corrige))
+    # --- Calcul métriques ---
+    metrics_before = compute_metrics(reference, predicted)
 
-mlflow.end_run()
+    # Log longueurs
+    mlflow.log_metric("len_predicted", len(predicted))
+
+    # Log métriques
+    for k, v in metrics_before.items():
+        mlflow.log_metric(f"{k}", v)
+
+    # --- Fin MLflow ---
+    mlflow.end_run()
+
+    return {
+        "reference": reference,
+        "ocr_original": predicted,
+        "metrics": metrics_before
+    }
+
+
+# Exemple d'appel
+if __name__ == "__main__":
+    resultat = evaluer_ocr(
+        "Berville_L_CV_IA-avril.jpg",
+        "Berville_L_CV_IA-avril.txt",
+        normaliser=True
+    )
+    print(resultat)
