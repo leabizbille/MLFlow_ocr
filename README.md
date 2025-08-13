@@ -28,7 +28,15 @@ projet_ocr/
 
 docker-compose up --build
 
-
+docker version
+ Cloud integration: v1.0.35+desktop.11
+ Version:           25.0.3
+ API version:       1.44
+ Go version:        go1.21.6
+ Git commit:        4debf41
+ Built:             Tue Feb  6 21:13:02 2024
+ OS/Arch:           windows/amd64
+ Context:           default
 
 
 Ton API → expose /metrics
