@@ -7,3 +7,6 @@ wget https://paddleocr.bj.bcebos.com/ppstructure/models/layout/picodet_lcnet_x1_
 Sous windows : pip install paddlepaddle
 
 Pour envoyer des fichier dans l api : pip install python-multipart
+
+mlflow ui
+
