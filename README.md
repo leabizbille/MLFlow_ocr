@@ -11,6 +11,8 @@ Pour envoyer des fichier dans l api : pip install python-multipart
 # ML FLOW
 mlflow ui
 http://127.0.0.1:5000/#/experiments
+
+API docs
 http://127.0.0.1:8000/docs#/
 
 Prometheus :
