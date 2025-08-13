@@ -36,6 +36,8 @@ venv/
 
 # Dossiers générés pour les fichiers téléchargés
 output
+uploads
+mlruns
 
 
 # Fichiers de tests
