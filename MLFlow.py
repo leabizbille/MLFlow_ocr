@@ -21,6 +21,7 @@ def evaluer_ocr(img_path: str, ground_truth_path: str, normaliser: bool = True):
     mlflow.start_run()
     mlflow.log_param("ocr_correction", False)
     mlflow.log_param("normalisation", normaliser)
+    mlflow.log_param("Dataset", img_path.split("/")[-1])  # <-- ajoute le nom du fichier
 
     # --- Calcul métriques ---
     metrics_before = compute_metrics(reference, predicted)
@@ -40,7 +41,6 @@ def evaluer_ocr(img_path: str, ground_truth_path: str, normaliser: bool = True):
         "ocr_original": predicted,
         "metrics": metrics_before
     }
-
 
 # Exemple d'appel
 if __name__ == "__main__":
