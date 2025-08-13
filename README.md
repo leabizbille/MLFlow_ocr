@@ -17,3 +17,10 @@ http://127.0.0.1:8000/docs#/
 
 Prometheus :
 http://localhost:8000/metrics
+
+Ton API → expose /metrics
+       ↑
+   Prometheus → stocke l’historique des métriques
+       ↑
+   Grafana → lit les données de Prometheus et les affiche joliment
+
