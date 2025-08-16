@@ -1,79 +1,68 @@
-version: "3.9"
+version: '3.8'
 
 services:
-  # ========================
-  # API FastAPI (OCR + metrics)
-  # ========================
-  api:
-    build: .
+
+  # =====================
+  # 1️⃣ API OCR
+  # =====================
+  api_ocr:
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: api_ocr
     ports:
-      - "8000:8000"
+      - "8000:8000"   # API
+      - "5000:5000"   # MLFlow UI
     volumes:
       - .:/app
-    command: uvicorn API:app --host 0.0.0.0 --port 8000 --reload
-    depends_on:
-      - mlflow
-    networks:
-      - monitoring
-
-  # ========================
-  # MLflow Tracking Server
-  # ========================
-  mlflow:
-    image: cr.fly.dev/mlflow/mlflow:latest
-    container_name: mlflow_server
-    ports:
-      - "5000:5000"
-    volumes:
-      - ./mlruns:/mlruns
     environment:
-      - MLFLOW_BACKEND_STORE_URI=sqlite:///mlflow.db
-      - MLFLOW_DEFAULT_ARTIFACT_ROOT=/mlruns
-    command: mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlruns --host 0.0.0.0
-    networks:
-      - monitoring
+      - PYTHONUNBUFFERED=1
+    command: python API.py
 
-  # ========================
-  # Prometheus
-  # ========================
+  # =====================
+  # 2️⃣ MLFlow
+  # =====================
+  mlflow:
+    image: mlflow/mlflow:2.8.0
+    container_name: mlflow
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./mlruns:/mlflow/mlruns
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    command: mlflow ui --host 0.0.0.0 --port 5000
+
+  # =====================
+  # 3️⃣ Prometheus
+  # =====================
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-    depends_on:
-      - api
-    networks:
-      - monitoring
+      - '--config.file=/etc/prometheus/prometheus.yml'
 
-  # ========================
-  # Grafana
-  # ========================
+  # =====================
+  # 4️⃣ Grafana
+  # =====================
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
     ports:
       - "3000:3000"
-    volumes:
-      - grafana_data:/var/lib/grafana
     environment:
-      - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
     depends_on:
       - prometheus
-    networks:
-      - monitoring
+    volumes:
+      - grafana_data:/var/lib/grafana
 
-# ========================
-# Réseaux & volumes
-# ========================
-networks:
-  monitoring:
-
+# =====================
+# Volumes persistants
+# =====================
 volumes:
   grafana_data:
