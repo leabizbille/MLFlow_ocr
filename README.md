@@ -48,6 +48,10 @@ docker version
  Context:           default
 
 
+ docker build -t api_ocr:v1 .
+
+
+Docker
 Ton API → expose /metrics
        ↑
    Prometheus → stocke l’historique des métriques
