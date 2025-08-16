@@ -18,12 +18,21 @@ http://127.0.0.1:8000/docs#/
 Prometheus :
 http://localhost:8000/metrics
 
-projet_ocr/
+16-E5Grafana/
 │
-├── api_ocr.py
+├── API.py
 ├── requirements.txt
 ├── prometheus.yml
-└── docker-compose.yml
+|── docker-compose.yml
+├── Dockerfile
+├── Fonctions_clean.py
+├── Fonctions_OCR.py
+├── FonctionsMetrics.py
+├── metrics_server.py
+├── MLFlow.py
+├── prometheus.yml
+├── README.md
+└── requirements.txt
 
 
 docker-compose up --build
@@ -39,6 +48,10 @@ docker version
  Context:           default
 
 
+ docker build -t api_ocr:v1 .
+
+
+Docker
 Ton API → expose /metrics
        ↑
    Prometheus → stocke l’historique des métriques
