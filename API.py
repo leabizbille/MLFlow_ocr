@@ -25,9 +25,6 @@ app.add_route("/metrics", metrics_endpoint)
 
 
 
-
-
-
 @app.post("/ocr/")
 async def ocr_image(file: UploadFile = File(...)):
     """
