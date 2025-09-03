@@ -104,3 +104,5 @@ def test_comparer_original_gt_returns_dict(mock_ocr, tmp_path):
     assert isinstance(result, dict)
     assert result["reference"] == "texte OCR simulé"
     assert result["ground_truth"] == "Texte attendu"
+
+
