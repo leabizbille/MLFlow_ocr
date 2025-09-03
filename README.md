@@ -141,3 +141,10 @@ pytest tests/test_api.py --maxfail=1 --disable-warnings -q
 
 
 docker build -t ocr-api:latest .
+docker compose up -d
+docker compose up -d mlflow
+
+docker ps
+docker logs -f mlflow
+
+docker build -t ocr-optuna .
