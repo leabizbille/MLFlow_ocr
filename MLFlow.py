@@ -6,7 +6,7 @@ from pathlib import Path
 
 # --- Configuration MLflow ---
 MLFLOW_URI = "http://mlflow:5000"
-mlflow.set_tracking_uri(MLFLOW_URI)
+mlflow.set_tracking_uri("file:///app/mlruns")
 mlflow.set_experiment("OCR_Evaluation")
 
 # --- Fonction d'évaluation simplifiée ---

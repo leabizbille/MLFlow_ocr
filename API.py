@@ -115,3 +115,4 @@ async def Comparaison_ocr(image: UploadFile = File(...), ground_truth: UploadFil
     # --- 3. Retour JSON ---
     return result
 
+print("API.py démarré")
