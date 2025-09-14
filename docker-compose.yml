@@ -11,13 +11,14 @@ services:
       dockerfile: Dockerfile
     container_name: api_ocr
     ports:
-      - "8000:8000"   # API
-      - "5000:5000"   # MLFlow UI
+      - "8002:8002"   # API
+      - "5002:5000"   # MLFlow UI
     volumes:
       - .:/app
     environment:
       - PYTHONUNBUFFERED=1
-    command: python API.py
+    command: uvicorn API:app --host 0.0.0.0 --port 8002
+
 
   # =====================
   # 2️⃣ MLFlow
@@ -26,7 +27,7 @@ services:
     image: ghcr.io/mlflow/mlflow:v2.0.1   
     container_name: mlflow
     ports:
-      - "5001:5000"
+      - "5003:5000"
     volumes:
     - ./mlruns:/mlflow/mlruns
     environment:
@@ -41,11 +42,12 @@ services:
     image: prom/prometheus:latest
     container_name: prometheus
     ports:
-      - "9090:9090"
+      - "9091:9090"
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
+
 
   # =====================
   # 4️⃣ Grafana

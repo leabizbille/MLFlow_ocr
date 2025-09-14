@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 from Fonctions_OCR import ComparerOriginal_GT_Normaliser, recuperer_texte_ocr, ComparerOriginal_GT
 import tempfile, shutil, os
 
+
 # Import du monitoring
 from metrics_server import prometheus_middleware, metrics_endpoint, TEXT_LENGTH
 
@@ -21,7 +22,8 @@ app = FastAPI(
 app.middleware("http")(prometheus_middleware)
 
 # Ajout de l'endpoint /metrics
-app.add_route("/metrics", metrics_endpoint)
+app.add_route("/metrics", metrics_endpoint, methods=["GET"])
+
 
 
 

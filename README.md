@@ -153,3 +153,5 @@ docker build -t ocr-optuna .
 
 
 docker run --rm --network 16-e5grafana_default -v "C:/Users/Lau/Documents/Moi/1-Travail (sept 23)/3-IA/1-Formation Greta/3-Projets/16-E5Grafana/mlruns:/app/mlruns" -p 5000:5000 ocr-optuna
+
+http://localhost:8002/metrics
